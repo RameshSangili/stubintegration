@@ -3,13 +3,13 @@ steps:
     args:
       - build
       - '-t'
-      - '$_IMAGE_NAME'
+      - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$SHORT_SHA'
       - '.'
 
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - push
-      - '$_IMAGE_NAME'
+      - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$SHORT_SHA'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
@@ -17,7 +17,7 @@ steps:
       - run
       - deploy
       - '$_SERVICE_NAME'
-      - '--image=$_IMAGE_NAME'
+      - '--image=gcr.io/$PROJECT_ID/$_SERVICE_NAME:$SHORT_SHA'
       - '--region=$_REGION'
       - '--platform=managed'
       - '--allow-unauthenticated'
@@ -25,7 +25,6 @@ steps:
 substitutions:
   _SERVICE_NAME: stub-integration
   _REGION: us-central1
-  _IMAGE_NAME: gcr.io/$PROJECT_ID/stub-integration:$SHORT_SHA
 
 options:
   logging: CLOUD_LOGGING_ONLY
